@@ -44,12 +44,13 @@
     .card {
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(12px);
-      padding: 45px 25px;
+      padding: 45px 20px;
       border-radius: 35px;
-      box-shadow: 0 20px 45px rgba(238, 156, 167, 0.45), 0 8px 20px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 20px 45px rgba(238, 156, 167, 0.45);
       border: 4px solid #ffffff;
       width: 100%;
-      max-width: 380px;
+      max-width: 360px;
+      position: relative;
       z-index: 10;
       display: flex;
       flex-direction: column;
@@ -58,25 +59,27 @@
 
     h1 {
       color: #ff3366;
-      font-size: 30px;
+      font-size: 28px;
       font-weight: 700;
-      line-height: 1.5;
-      margin-bottom: 35px;
+      line-height: 1.4;
+      margin-bottom: 20px;
       -webkit-text-stroke: 1.5px #ffffff;
       text-shadow: 0px 4px 10px rgba(255, 51, 102, 0.25);
     }
 
-    .btn-container {
+    /* พื้นที่สำหรับปุ่ม ให้ปุ่มวิ่งวนเล่นได้เฉพาะในกล่องนี้ */
+    .btn-area {
+      position: relative;
       width: 100%;
+      height: 180px; 
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 15px;
     }
 
     button {
-      padding: 16px 24px;
-      font-size: 19px;
+      padding: 14px 24px;
+      font-size: 18px;
       font-family: 'Mitr', sans-serif;
       font-weight: 600;
       border: 3px solid #ffffff;
@@ -85,39 +88,32 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
       outline: none;
       touch-action: manipulation;
-      min-width: 140px;
-      height: 62px;
+      position: absolute;
     }
 
     #yesBtn {
       background: linear-gradient(135deg, #ff758f, #ff4d6d);
       color: #ffffff;
       text-shadow: 0 2px 4px rgba(0,0,0,0.15);
-      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      left: 15px;
+      top: 65px;
+      z-index: 2;
+      transition: transform 0.2s ease;
     }
 
     #yesBtn:active {
       transform: scale(0.92);
     }
 
-    /* กรอบปุ่มไม่อยากคุย (อยู่กับที่) */
+    /* ปุ่มไม่อยากคุย - ย้ายแค่ภายใน .btn-area */
     #noBtn {
       background: linear-gradient(135deg, #d8b4fe, #c084fc);
       color: #3b0764;
       text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-      position: relative;
-      overflow: hidden; /* ป้องกันข้อความทะลุออกนอกกรอบ */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* ข้อความด้านในที่จะเด้งดุ๊กดิ๊กหนีนิ้ว */
-    .btn-text {
-      position: absolute;
-      white-space: nowrap;
-      transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      will-change: transform;
+      right: 15px;
+      top: 65px;
+      z-index: 3;
+      transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
     .modal {
@@ -186,11 +182,9 @@
   <div class="card">
     <h1>พี่อยากคุยกับเค้ามั้ยยยย 🥺💖</h1>
     
-    <div class="btn-container">
+    <div class="btn-area" id="btnArea">
       <button id="yesBtn" onclick="clickYes()">อยากคุย 💕</button>
-      <button id="noBtn" onclick="handleNoClick()" ontouchstart="handleNoClick()">
-        <span class="btn-text" id="noText">ไม่อยากคุย 🥺</span>
-      </button>
+      <button id="noBtn" onclick="moveButton()" ontouchstart="moveButton(event)">ไม่อยากคุย 🥺</button>
     </div>
   </div>
 
@@ -206,29 +200,24 @@
     let escapeCount = 0;
     const maxEscapes = 10;
 
-    // พิกัดขยับหลบหนีรอบๆ ปุ่ม (ซ้าย ขวา บน ล่าง มุมต่างๆ)
-    const positions = [
-      { x: -35, y: -12 },
-      { x: 35, y: 12 },
-      { x: -30, y: 12 },
-      { x: 30, y: -12 },
-      { x: 0, y: -18 },
-      { x: 0, y: 18 },
-      { x: -35, y: 0 },
-      { x: 35, y: 0 },
-      { x: -25, y: -15 },
-      { x: 25, y: 15 }
-    ];
-
-    function handleNoClick() {
-      const noText = document.getElementById('noText');
+    function moveButton(e) {
+      if (e) e.preventDefault();
+      
+      const noBtn = document.getElementById('noBtn');
+      const area = document.getElementById('btnArea');
 
       if (escapeCount < maxEscapes) {
-        // ดึงตำแหน่งสุ่มขยับหลบหนี
-        const pos = positions[escapeCount % positions.length];
-        noText.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
-
         escapeCount++;
+
+        // คำนวณขอบเขตให้อยู่เฉพาะในการ์ด
+        const maxX = area.clientWidth - noBtn.clientWidth;
+        const maxY = area.clientHeight - noBtn.clientHeight;
+
+        const randomX = Math.floor(Math.random() * maxX);
+        const randomY = Math.floor(Math.random() * maxY);
+
+        noBtn.style.left = randomX + 'px';
+        noBtn.style.top = randomY + 'px';
 
         if (escapeCount === maxEscapes) {
           setTimeout(() => {
