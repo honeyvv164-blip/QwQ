@@ -25,18 +25,30 @@
       align-items: center;
       overflow: hidden;
       padding: 20px;
-      position: relative;
+    }
+
+    .heart-bg {
+      position: absolute;
+      font-size: 28px;
+      opacity: 0.35;
+      animation: float 5s infinite ease-in-out;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(12deg); }
     }
 
     .card {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(12px);
-      padding: 35px 20px;
+      padding: 40px 20px;
       border-radius: 35px;
       box-shadow: 0 20px 45px rgba(238, 156, 167, 0.45);
       border: 4px solid #ffffff;
       width: 100%;
-      max-width: 320px;
+      max-width: 340px;
       position: relative;
       z-index: 10;
       display: flex;
@@ -56,11 +68,11 @@
 
     .btn-container {
       width: 100%;
-      height: 70px;
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 15px;
+      transition: all 0.3s ease;
     }
 
     button {
@@ -74,26 +86,27 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
       outline: none;
       touch-action: manipulation;
+      transition: transform 0.2s ease, opacity 0.3s ease;
     }
 
     #yesBtn {
       background: linear-gradient(135deg, #ff758f, #ff4d6d);
       color: #ffffff;
       text-shadow: 0 2px 4px rgba(0,0,0,0.15);
-      transition: transform 0.2s ease;
     }
 
     #yesBtn:active {
       transform: scale(0.92);
     }
 
-    /* ปุ่มม่วง ไม่อยากคุย */
     #noBtn {
       background: linear-gradient(135deg, #d8b4fe, #c084fc);
       color: #3b0764;
       text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-      z-index: 99;
-      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    #noBtn:active {
+      transform: scale(0.92);
     }
 
     .modal {
@@ -128,15 +141,8 @@
     .modal-content h2 {
       color: #ff3366;
       margin-bottom: 15px;
-      font-size: 24px;
-      -webkit-text-stroke: 0.5px #ffffff;
-    }
-
-    .modal-content p {
-      color: #4a4e69;
-      font-size: 18px;
-      margin-bottom: 25px;
-      font-weight: 600;
+      font-size: 22px;
+      line-height: 1.4;
     }
 
     .close-btn {
@@ -149,83 +155,67 @@
       font-family: 'Mitr', sans-serif;
       font-size: 18px;
       font-weight: 600;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
+
+  <div class="heart-bg" style="top: 8%; left: 10%;">💖</div>
+  <div class="heart-bg" style="top: 15%; right: 12%; animation-delay: 1s;">✨</div>
+  <div class="heart-bg" style="top: 75%; left: 8%; animation-delay: 2s;">🌸</div>
+  <div class="heart-bg" style="top: 82%; right: 10%; animation-delay: 1.5s;">💕</div>
 
   <div class="card">
     <h1>พี่อยากคุยกับเค้ามั้ยยยย 🥺💖</h1>
     
     <div class="btn-container">
       <button id="yesBtn" onclick="clickYes()">อยากคุย 💕</button>
-      <button id="noBtn" onclick="moveButton()" ontouchstart="moveButton(event)">ไม่อยากคุย 🥺</button>
+      <button id="noBtn" onclick="handleNoClick()">ไม่อยากคุย 🥺</button>
     </div>
   </div>
 
   <div class="modal" id="myModal">
     <div class="modal-content">
       <h2 id="modalTitle">ข้อความ 💌</h2>
-      <p id="modalText">เนื้อหาข้อความ...</p>
       <button class="close-btn" onclick="closeModal()">ตกลง 💖</button>
     </div>
   </div>
 
   <script>
-    let escapeCount = 0;
-    const maxEscapes = 10;
+    let clickCount = 0;
 
-    function moveButton(e) {
-      if (e) e.preventDefault();
-      
-      const noBtn = document.getElementById('noBtn');
+    function handleNoClick() {
+      clickCount++;
 
-      if (escapeCount < maxEscapes) {
-        escapeCount++;
-
-        noBtn.style.position = 'fixed';
-
-        // คำนวณจุดกึ่งกลางหน้าจอแบบชัวร์ๆ
-        const centerX = window.innerWidth / 2;
-        const centerY = window.innerHeight / 2;
-
-        // สุ่มตำแหน่งเด้งให้อยู่รอบๆ ศูนย์กลางหน้าจอไม่เกินระยะ 180px
-        const offsetX = (Math.random() - 0.5) * 360; 
-        const offsetY = (Math.random() - 0.5) * 360; 
-
-        let finalX = centerX + offsetX - (noBtn.offsetWidth / 2);
-        let finalY = centerY + offsetY - (noBtn.offsetHeight / 2);
-
-        // เซฟตี้กันเหนียวไม่ให้ชิดขอบจอเกินไป
-        const padding = 20;
-        finalX = Math.max(padding, Math.min(window.innerWidth - noBtn.offsetWidth - padding, finalX));
-        finalY = Math.max(padding, Math.min(window.innerHeight - noBtn.offsetHeight - padding, finalY));
-
-        noBtn.style.left = finalX + 'px';
-        noBtn.style.top = finalY + 'px';
-
-        if (escapeCount === maxEscapes) {
-          setTimeout(() => {
-            showModal("เค้างอนแล้ว 😠", "เธอต้องง้อ 😠🔥");
-          }, 250);
-        }
-      } else {
-        showModal("เค้างอนแล้ว 😠", "เธอต้องง้อ 😠🔥");
+      if (clickCount === 1) {
+        showModal("พี่ไม่อยากคุยกับเค้าจริงเหรออออ🥺");
+      } else if (clickCount === 2) {
+        showModal("น๊าาา มาคุยกัน เค้าอยากคุยกับพี่น้าาาาาาา🤗💓");
+      } else if (clickCount === 3) {
+        showModal("พี่ไม่มีสิทธิ์ปฏิเสธ ไอโง๊วเอ๊ย🥰");
       }
     }
 
     function clickYes() {
-      showModal("น่ารักที่สุดเลยไอต้าวววววว 🥰✨", "มาโทรกันเต๊อะ💕💕💕");
+      showModal("น่ารักที่สุดเลยไอต้าวววววว 🥰✨ มาโทรกันเต๊อะ💕💕💕");
     }
 
-    function showModal(title, text) {
+    function showModal(title) {
       document.getElementById('modalTitle').innerText = title;
-      document.getElementById('modalText').innerText = text;
       document.getElementById('myModal').style.display = 'flex';
     }
 
     function closeModal() {
       document.getElementById('myModal').style.display = 'none';
+
+      // ถ้ากดปุ่มไม่อยากคุยครบ 3 ครั้งแล้ว พอปิดป๊อปอัพ ปุ่มสีม่วงจะหายวับไปเลย!
+      if (clickCount >= 3) {
+        const noBtn = document.getElementById('noBtn');
+        if (noBtn) {
+          noBtn.style.display = 'none';
+        }
+      }
     }
   </script>
 
