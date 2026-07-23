@@ -184,25 +184,46 @@
   <script>
     let clickCount = 0;
 
+    // ทิศทางการกระโดด: บน, ล่าง, ซ้าย, ขวา
+    const directions = ['TOP', 'BOTTOM', 'LEFT', 'RIGHT'];
+
     function handleNoClick(e) {
       if (e) e.preventDefault();
       clickCount++;
 
       const noBtn = document.getElementById('noBtn');
-
-      // ล็อคพิกัดเด้งไปรอบๆ หน้าจอ (เซฟตี้ไม่ให้หลุดขอบจอ)
       noBtn.style.position = 'fixed';
+
+      const padding = 25;
+      const btnWidth = noBtn.offsetWidth || 130;
+      const btnHeight = noBtn.offsetHeight || 50;
+
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
-      const offsetX = (Math.random() - 0.5) * 320; 
-      const offsetY = (Math.random() - 0.5) * 320; 
 
-      let finalX = centerX + offsetX - (noBtn.offsetWidth / 2);
-      let finalY = centerY + offsetY - (noBtn.offsetHeight / 2);
+      // สุ่มทิศทางที่จะเด้งไป (บน / ล่าง / ซ้าย / ขวา)
+      const currentDirection = directions[(clickCount - 1) % directions.length];
+      
+      let finalX = centerX - (btnWidth / 2);
+      let finalY = centerY - (btnHeight / 2);
 
-      const padding = 20;
-      finalX = Math.max(padding, Math.min(window.innerWidth - noBtn.offsetWidth - padding, finalX));
-      finalY = Math.max(padding, Math.min(window.innerHeight - noBtn.offsetHeight - padding, finalY));
+      if (currentDirection === 'TOP') {
+        finalY = padding + Math.random() * (centerY - padding - 100);
+        finalX = centerX + (Math.random() - 0.5) * 200 - (btnWidth / 2);
+      } else if (currentDirection === 'BOTTOM') {
+        finalY = centerY + 100 + Math.random() * (window.innerHeight - centerY - 100 - btnHeight - padding);
+        finalX = centerX + (Math.random() - 0.5) * 200 - (btnWidth / 2);
+      } else if (currentDirection === 'LEFT') {
+        finalX = padding + Math.random() * (centerX - padding - 100);
+        finalY = centerY + (Math.random() - 0.5) * 200 - (btnHeight / 2);
+      } else if (currentDirection === 'RIGHT') {
+        finalX = centerX + 100 + Math.random() * (window.innerWidth - centerX - 100 - btnWidth - padding);
+        finalY = centerY + (Math.random() - 0.5) * 200 - (btnHeight / 2);
+      }
+
+      // เซฟตี้ขอบจอ ล็อคไม่ให้หลุดสายตา
+      finalX = Math.max(padding, Math.min(window.innerWidth - btnWidth - padding, finalX));
+      finalY = Math.max(padding, Math.min(window.innerHeight - btnHeight - padding, finalY));
 
       noBtn.style.left = finalX + 'px';
       noBtn.style.top = finalY + 'px';
@@ -229,7 +250,6 @@
     function closeModal() {
       document.getElementById('myModal').style.display = 'none';
 
-      // พอกดปิดป๊อปอัพครั้งที่ 3 ปุ่มสีม่วงจะหายวับไปเลย!
       if (clickCount >= 3) {
         const noBtn = document.getElementById('noBtn');
         if (noBtn) {
