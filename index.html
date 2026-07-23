@@ -25,7 +25,6 @@
       align-items: center;
       overflow: hidden;
       padding: 20px;
-      position: relative;
     }
 
     .heart-bg {
@@ -49,7 +48,7 @@
       box-shadow: 0 20px 45px rgba(238, 156, 167, 0.45);
       border: 4px solid #ffffff;
       width: 100%;
-      max-width: 320px;
+      max-width: 340px;
       position: relative;
       z-index: 10;
       display: flex;
@@ -69,7 +68,6 @@
 
     .btn-container {
       width: 100%;
-      height: 60px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -87,13 +85,13 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
       outline: none;
       touch-action: manipulation;
+      transition: transform 0.2s ease;
     }
 
     #yesBtn {
       background: linear-gradient(135deg, #ff758f, #ff4d6d);
       color: #ffffff;
       text-shadow: 0 2px 4px rgba(0,0,0,0.15);
-      transition: transform 0.2s ease;
     }
 
     #yesBtn:active {
@@ -104,8 +102,10 @@
       background: linear-gradient(135deg, #d8b4fe, #c084fc);
       color: #3b0764;
       text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-      z-index: 99;
-      transition: all 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    #noBtn:active {
+      transform: scale(0.92);
     }
 
     .modal {
@@ -170,7 +170,7 @@
     
     <div class="btn-container">
       <button id="yesBtn" onclick="clickYes()">อยากคุย 💕</button>
-      <button id="noBtn" onclick="handleNoClick(event)" ontouchstart="handleNoClick(event)">ไม่อยากคุย 🥺</button>
+      <button id="noBtn" onclick="handleNoClick()">ไม่อยากคุย 🥺</button>
     </div>
   </div>
 
@@ -184,51 +184,9 @@
   <script>
     let clickCount = 0;
 
-    // ทิศทางการกระโดด: บน, ล่าง, ซ้าย, ขวา
-    const directions = ['TOP', 'BOTTOM', 'LEFT', 'RIGHT'];
-
-    function handleNoClick(e) {
-      if (e) e.preventDefault();
+    function handleNoClick() {
       clickCount++;
 
-      const noBtn = document.getElementById('noBtn');
-      noBtn.style.position = 'fixed';
-
-      const padding = 25;
-      const btnWidth = noBtn.offsetWidth || 130;
-      const btnHeight = noBtn.offsetHeight || 50;
-
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
-
-      // สุ่มทิศทางที่จะเด้งไป (บน / ล่าง / ซ้าย / ขวา)
-      const currentDirection = directions[(clickCount - 1) % directions.length];
-      
-      let finalX = centerX - (btnWidth / 2);
-      let finalY = centerY - (btnHeight / 2);
-
-      if (currentDirection === 'TOP') {
-        finalY = padding + Math.random() * (centerY - padding - 100);
-        finalX = centerX + (Math.random() - 0.5) * 200 - (btnWidth / 2);
-      } else if (currentDirection === 'BOTTOM') {
-        finalY = centerY + 100 + Math.random() * (window.innerHeight - centerY - 100 - btnHeight - padding);
-        finalX = centerX + (Math.random() - 0.5) * 200 - (btnWidth / 2);
-      } else if (currentDirection === 'LEFT') {
-        finalX = padding + Math.random() * (centerX - padding - 100);
-        finalY = centerY + (Math.random() - 0.5) * 200 - (btnHeight / 2);
-      } else if (currentDirection === 'RIGHT') {
-        finalX = centerX + 100 + Math.random() * (window.innerWidth - centerX - 100 - btnWidth - padding);
-        finalY = centerY + (Math.random() - 0.5) * 200 - (btnHeight / 2);
-      }
-
-      // เซฟตี้ขอบจอ ล็อคไม่ให้หลุดสายตา
-      finalX = Math.max(padding, Math.min(window.innerWidth - btnWidth - padding, finalX));
-      finalY = Math.max(padding, Math.min(window.innerHeight - btnHeight - padding, finalY));
-
-      noBtn.style.left = finalX + 'px';
-      noBtn.style.top = finalY + 'px';
-
-      // สลับข้อความตามจำนวนครั้งที่กด
       if (clickCount === 1) {
         showModal("พี่ไม่อยากคุยกับเค้าจริงเหรออออ🥺");
       } else if (clickCount === 2) {
@@ -250,6 +208,7 @@
     function closeModal() {
       document.getElementById('myModal').style.display = 'none';
 
+      // พอกดปิดข้อความครั้งที่ 3 แล้ว ปุ่มสีม่วงจะซ่อนไปเลย
       if (clickCount >= 3) {
         const noBtn = document.getElementById('noBtn');
         if (noBtn) {
