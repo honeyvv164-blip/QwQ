@@ -25,6 +25,7 @@
       align-items: center;
       overflow: hidden;
       padding: 20px;
+      position: relative;
     }
 
     .heart-bg {
@@ -48,7 +49,7 @@
       box-shadow: 0 20px 45px rgba(238, 156, 167, 0.45);
       border: 4px solid #ffffff;
       width: 100%;
-      max-width: 340px;
+      max-width: 320px;
       position: relative;
       z-index: 10;
       display: flex;
@@ -68,11 +69,11 @@
 
     .btn-container {
       width: 100%;
+      height: 60px;
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 15px;
-      transition: all 0.3s ease;
     }
 
     button {
@@ -86,13 +87,13 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
       outline: none;
       touch-action: manipulation;
-      transition: transform 0.2s ease, opacity 0.3s ease;
     }
 
     #yesBtn {
       background: linear-gradient(135deg, #ff758f, #ff4d6d);
       color: #ffffff;
       text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      transition: transform 0.2s ease;
     }
 
     #yesBtn:active {
@@ -103,10 +104,8 @@
       background: linear-gradient(135deg, #d8b4fe, #c084fc);
       color: #3b0764;
       text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-    }
-
-    #noBtn:active {
-      transform: scale(0.92);
+      z-index: 99;
+      transition: all 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .modal {
@@ -171,7 +170,7 @@
     
     <div class="btn-container">
       <button id="yesBtn" onclick="clickYes()">อยากคุย 💕</button>
-      <button id="noBtn" onclick="handleNoClick()">ไม่อยากคุย 🥺</button>
+      <button id="noBtn" onclick="handleNoClick(event)" ontouchstart="handleNoClick(event)">ไม่อยากคุย 🥺</button>
     </div>
   </div>
 
@@ -185,14 +184,35 @@
   <script>
     let clickCount = 0;
 
-    function handleNoClick() {
+    function handleNoClick(e) {
+      if (e) e.preventDefault();
       clickCount++;
 
+      const noBtn = document.getElementById('noBtn');
+
+      // ล็อคพิกัดเด้งไปรอบๆ หน้าจอ (เซฟตี้ไม่ให้หลุดขอบจอ)
+      noBtn.style.position = 'fixed';
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const offsetX = (Math.random() - 0.5) * 320; 
+      const offsetY = (Math.random() - 0.5) * 320; 
+
+      let finalX = centerX + offsetX - (noBtn.offsetWidth / 2);
+      let finalY = centerY + offsetY - (noBtn.offsetHeight / 2);
+
+      const padding = 20;
+      finalX = Math.max(padding, Math.min(window.innerWidth - noBtn.offsetWidth - padding, finalX));
+      finalY = Math.max(padding, Math.min(window.innerHeight - noBtn.offsetHeight - padding, finalY));
+
+      noBtn.style.left = finalX + 'px';
+      noBtn.style.top = finalY + 'px';
+
+      // สลับข้อความตามจำนวนครั้งที่กด
       if (clickCount === 1) {
         showModal("พี่ไม่อยากคุยกับเค้าจริงเหรออออ🥺");
       } else if (clickCount === 2) {
         showModal("น๊าาา มาคุยกัน เค้าอยากคุยกับพี่น้าาาาาาา🤗💓");
-      } else if (clickCount === 3) {
+      } else if (clickCount >= 3) {
         showModal("พี่ไม่มีสิทธิ์ปฏิเสธ ไอโง๊วเอ๊ย🥰");
       }
     }
@@ -209,7 +229,7 @@
     function closeModal() {
       document.getElementById('myModal').style.display = 'none';
 
-      // ถ้ากดปุ่มไม่อยากคุยครบ 3 ครั้งแล้ว พอปิดป๊อปอัพ ปุ่มสีม่วงจะหายวับไปเลย!
+      // พอกดปิดป๊อปอัพครั้งที่ 3 ปุ่มสีม่วงจะหายวับไปเลย!
       if (clickCount >= 3) {
         const noBtn = document.getElementById('noBtn');
         if (noBtn) {
