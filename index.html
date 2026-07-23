@@ -41,15 +41,15 @@
       50% { transform: translateY(-20px) rotate(12deg); }
     }
 
+    /* การ์ดสีชมพูละมุน */
     .card {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(12px);
-      padding: 45px 20px;
+      background: #fff0f3;
+      padding: 35px 20px;
       border-radius: 35px;
-      box-shadow: 0 20px 45px rgba(238, 156, 167, 0.45);
+      box-shadow: 0 15px 35px rgba(238, 156, 167, 0.4);
       border: 4px solid #ffffff;
       width: 100%;
-      max-width: 360px;
+      max-width: 350px;
       position: relative;
       z-index: 10;
       display: flex;
@@ -59,33 +59,33 @@
 
     h1 {
       color: #ff3366;
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 700;
       line-height: 1.4;
-      margin-bottom: 20px;
-      -webkit-text-stroke: 1.5px #ffffff;
-      text-shadow: 0px 4px 10px rgba(255, 51, 102, 0.25);
+      margin-bottom: 25px;
+      -webkit-text-stroke: 1.2px #ffffff;
+      text-shadow: 0px 4px 10px rgba(255, 51, 102, 0.2);
     }
 
-    /* พื้นที่สำหรับปุ่ม ให้ปุ่มวิ่งวนเล่นได้เฉพาะในกล่องนี้ */
+    /* กรอบจำกัดขอบเขตในสายตา */
     .btn-area {
       position: relative;
       width: 100%;
-      height: 180px; 
+      height: 140px; 
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
     button {
-      padding: 14px 24px;
+      padding: 12px 22px;
       font-size: 18px;
       font-family: 'Mitr', sans-serif;
       font-weight: 600;
       border: 3px solid #ffffff;
       border-radius: 50px;
       cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
       outline: none;
       touch-action: manipulation;
       position: absolute;
@@ -95,8 +95,8 @@
       background: linear-gradient(135deg, #ff758f, #ff4d6d);
       color: #ffffff;
       text-shadow: 0 2px 4px rgba(0,0,0,0.15);
-      left: 15px;
-      top: 65px;
+      left: 10px;
+      top: 45px;
       z-index: 2;
       transition: transform 0.2s ease;
     }
@@ -105,15 +105,15 @@
       transform: scale(0.92);
     }
 
-    /* ปุ่มไม่อยากคุย - ย้ายแค่ภายใน .btn-area */
+    /* ปุ่มไม่อยากคุย เด้งอยู่ในระยะสายตา */
     #noBtn {
       background: linear-gradient(135deg, #d8b4fe, #c084fc);
       color: #3b0764;
       text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-      right: 15px;
-      top: 65px;
+      right: 10px;
+      top: 45px;
       z-index: 3;
-      transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .modal {
@@ -135,7 +135,7 @@
       text-align: center;
       box-shadow: 0 20px 40px rgba(0,0,0,0.25);
       animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      max-width: 340px;
+      max-width: 320px;
       width: 100%;
       border: 4px solid #ffccd5;
     }
@@ -209,7 +209,7 @@
       if (escapeCount < maxEscapes) {
         escapeCount++;
 
-        // คำนวณขอบเขตให้อยู่เฉพาะในการ์ด
+        // ล็อคพิกัดขยับเด้งให้อยู่ในพื้นที่การ์ดสายตาแบบเป๊ะๆ
         const maxX = area.clientWidth - noBtn.clientWidth;
         const maxY = area.clientHeight - noBtn.clientHeight;
 
