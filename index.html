@@ -196,7 +196,7 @@
         let finalX = centerX + offsetX - (noBtn.offsetWidth / 2);
         let finalY = centerY + offsetY - (noBtn.offsetHeight / 2);
 
-        // เซฟตี้กันเหนียวอีกชั้นไม่ให้ชิดขอบจอเกินไป
+        // เซฟตี้กันเหนียวไม่ให้ชิดขอบจอเกินไป
         const padding = 20;
         finalX = Math.max(padding, Math.min(window.innerWidth - noBtn.offsetWidth - padding, finalX));
         finalY = Math.max(padding, Math.min(window.innerHeight - noBtn.offsetHeight - padding, finalY));
