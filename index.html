@@ -25,20 +25,21 @@
       align-items: center;
       overflow: hidden;
       padding: 20px;
+      position: relative;
     }
 
-    /* การ์ดสีชมพูขนาดกะทัดรัดเท่าเดิม */
-    .card-pink {
-      background: rgba(255, 255, 255, 0.92);
+    /* การ์ดสีขาวตรงกลาง */
+    .card {
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(12px);
       padding: 35px 20px;
       border-radius: 35px;
       box-shadow: 0 20px 45px rgba(238, 156, 167, 0.45);
       border: 4px solid #ffffff;
       width: 100%;
-      max-width: 340px;
-      height: 320px; /* ล็อคขนาดความสูงไว้พอดีการ์ดเดิม */
+      max-width: 320px;
       position: relative;
+      z-index: 10;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -49,16 +50,18 @@
       font-size: 26px;
       font-weight: 700;
       line-height: 1.4;
-      margin-bottom: 15px;
+      margin-bottom: 25px;
       -webkit-text-stroke: 1.2px #ffffff;
       text-shadow: 0px 4px 10px rgba(255, 51, 102, 0.2);
     }
 
-    /* พื้นที่เล่นปุ่ม เด้งได้ทั่วภายในการ์ดสีชมพู */
-    .play-area {
-      position: relative;
+    .btn-container {
       width: 100%;
-      flex-grow: 1;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
     }
 
     button {
@@ -72,17 +75,12 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
       outline: none;
       touch-action: manipulation;
-      position: absolute;
     }
 
-    /* ปุ่มอยากคุย อยู่ประจำตำแหน่ง */
     #yesBtn {
       background: linear-gradient(135deg, #ff758f, #ff4d6d);
       color: #ffffff;
       text-shadow: 0 2px 4px rgba(0,0,0,0.15);
-      left: 10px;
-      top: 20px;
-      z-index: 2;
       transition: transform 0.2s ease;
     }
 
@@ -90,15 +88,13 @@
       transform: scale(0.92);
     }
 
-    /* ปุ่มไม่อยากคุย เด้งหนีออกจากโซนเดิม มาวิ่งทั่วการ์ดสีชมพู */
+    /* ปุ่มไม่อยากคุย - พอกดปั๊บจะหลุดออกจากตัวการ์ดไปวิ่งบนพื้นหลังสีชมพู */
     #noBtn {
       background: linear-gradient(135deg, #d8b4fe, #c084fc);
       color: #3b0764;
       text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-      right: 10px;
-      top: 20px;
-      z-index: 3;
-      transition: all 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 99;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .modal {
@@ -159,10 +155,10 @@
 </head>
 <body>
 
-  <div class="card-pink">
+  <div class="card">
     <h1>พี่อยากคุยกับเค้ามั้ยยยย 🥺💖</h1>
     
-    <div class="play-area" id="playArea">
+    <div class="btn-container">
       <button id="yesBtn" onclick="clickYes()">อยากคุย 💕</button>
       <button id="noBtn" onclick="moveButton()" ontouchstart="moveButton(event)">ไม่อยากคุย 🥺</button>
     </div>
@@ -184,17 +180,20 @@
       if (e) e.preventDefault();
       
       const noBtn = document.getElementById('noBtn');
-      const area = document.getElementById('playArea');
 
       if (escapeCount < maxEscapes) {
         escapeCount++;
 
-        // สุ่มพิกัดให้อยู่แค่ภายในกล่องการ์ดสีชมพู ไม่หลุดขอบการ์ดออกไป
-        const maxX = area.clientWidth - noBtn.clientWidth;
-        const maxY = area.clientHeight - noBtn.clientHeight;
+        // บังคับเปลี่ยนสถานะปุ่มให้ออกมาจากกรอบการ์ดขาว ไปอยู่บนพื้นหลังสีชมพูทันที
+        noBtn.style.position = 'fixed';
 
-        const randomX = Math.floor(Math.random() * maxX);
-        const randomY = Math.floor(Math.random() * maxY);
+        // คำนวณระยะขอบจอ (Padding 20px) ไม่ให้ปุ่มหลุดตกขอบสายตา
+        const padding = 20;
+        const maxX = window.innerWidth - noBtn.clientWidth - padding;
+        const maxY = window.innerHeight - noBtn.clientHeight - padding;
+
+        const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+        const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
 
         noBtn.style.left = randomX + 'px';
         noBtn.style.top = randomY + 'px';
