@@ -25,6 +25,7 @@
       align-items: center;
       overflow: hidden;
       padding: 20px;
+      position: relative;
     }
 
     .heart-bg {
@@ -156,6 +157,27 @@
       font-weight: 600;
       margin-top: 10px;
     }
+
+    /* ฉากจบ แบร่😋 ตัวใหญ่ตรงกลาง */
+    #finalScreen {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      animation: popIn 0.5s ease-out;
+    }
+
+    #finalText {
+      color: #ff3366;
+      font-size: 64px;
+      font-weight: 700;
+      text-shadow: 0px 8px 20px rgba(255, 51, 102, 0.3);
+      -webkit-text-stroke: 2px #ffffff;
+    }
   </style>
 </head>
 <body>
@@ -165,7 +187,7 @@
   <div class="heart-bg" style="top: 75%; left: 8%; animation-delay: 2s;">🌸</div>
   <div class="heart-bg" style="top: 82%; right: 10%; animation-delay: 1.5s;">💕</div>
 
-  <div class="card">
+  <div class="card" id="mainCard">
     <h1>พี่อยากคุยกับเค้ามั้ยยยย 🥺💖</h1>
     
     <div class="btn-container">
@@ -181,8 +203,14 @@
     </div>
   </div>
 
+  <!-- ฉากจบ -->
+  <div id="finalScreen">
+    <div id="finalText">แบร่😋</div>
+  </div>
+
   <script>
     let clickCount = 0;
+    let isFinished = false;
 
     function handleNoClick() {
       clickCount++;
@@ -197,6 +225,7 @@
     }
 
     function clickYes() {
+      isFinished = true;
       showModal("น่ารักที่สุดเลยไอต้าวววววว 🥰✨ มาโทรกันเต๊อะ💕💕💕");
     }
 
@@ -208,12 +237,18 @@
     function closeModal() {
       document.getElementById('myModal').style.display = 'none';
 
-      // พอกดปิดข้อความครั้งที่ 3 แล้ว ปุ่มสีม่วงจะซ่อนไปเลย
+      // พอกดปิดข้อความครั้งที่ 3 แล้ว ปุ่มสีม่วงจะซ่อนไป
       if (clickCount >= 3) {
         const noBtn = document.getElementById('noBtn');
         if (noBtn) {
           noBtn.style.display = 'none';
         }
+      }
+
+      // ถ้ากดปุ่ม "อยากคุย" แล้วปิดป๊อปอัพ จะเข้าฉากจบ "แบร่😋"
+      if (isFinished) {
+        document.getElementById('mainCard').style.display = 'none';
+        document.getElementById('finalScreen').style.display = 'flex';
       }
     }
   </script>
