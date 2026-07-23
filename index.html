@@ -21,37 +21,23 @@
       background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       overflow: hidden;
       padding: 20px;
     }
 
-    .heart-bg {
-      position: absolute;
-      font-size: 28px;
-      opacity: 0.35;
-      animation: float 5s infinite ease-in-out;
-      pointer-events: none;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(12deg); }
-    }
-
-    /* การ์ดสีชมพูละมุน */
-    .card {
-      background: #fff0f3;
-      padding: 35px 20px;
+    /* พื้นหลังการ์ดสีชมพูขนาดใหญ่แบบเต็มตา */
+    .card-pink {
+      background: #ffe6eb;
+      padding: 35px 20px 20px 20px;
       border-radius: 35px;
-      box-shadow: 0 15px 35px rgba(238, 156, 167, 0.4);
+      box-shadow: 0 20px 45px rgba(238, 156, 167, 0.45);
       border: 4px solid #ffffff;
       width: 100%;
-      max-width: 350px;
+      max-width: 380px;
+      height: 480px; /* ล็อคความสูงการ์ดไว้พอดีสายตา */
       position: relative;
-      z-index: 10;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -62,41 +48,39 @@
       font-size: 26px;
       font-weight: 700;
       line-height: 1.4;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       -webkit-text-stroke: 1.2px #ffffff;
       text-shadow: 0px 4px 10px rgba(255, 51, 102, 0.2);
     }
 
-    /* กรอบจำกัดขอบเขตในสายตา */
-    .btn-area {
+    /* พื้นที่สีชมพูทั้งหมดที่ปุ่มจะเด้งเล่นได้ในระยะสายตา */
+    .play-area {
       position: relative;
       width: 100%;
-      height: 140px; 
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-grow: 1;
     }
 
     button {
-      padding: 12px 22px;
+      padding: 14px 24px;
       font-size: 18px;
       font-family: 'Mitr', sans-serif;
       font-weight: 600;
       border: 3px solid #ffffff;
       border-radius: 50px;
       cursor: pointer;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
       outline: none;
       touch-action: manipulation;
       position: absolute;
     }
 
+    /* ปุ่มอยากคุย ล็อคตำแหน่งไว้อย่างมั่นคง */
     #yesBtn {
       background: linear-gradient(135deg, #ff758f, #ff4d6d);
       color: #ffffff;
       text-shadow: 0 2px 4px rgba(0,0,0,0.15);
-      left: 10px;
-      top: 45px;
+      left: 15px;
+      top: 20px;
       z-index: 2;
       transition: transform 0.2s ease;
     }
@@ -105,15 +89,15 @@
       transform: scale(0.92);
     }
 
-    /* ปุ่มไม่อยากคุย เด้งอยู่ในระยะสายตา */
+    /* ปุ่มไม่อยากคุย เด้งขยับได้ทั่วพื้นที่สีชมพู ไม่หลุดสายตา */
     #noBtn {
       background: linear-gradient(135deg, #d8b4fe, #c084fc);
       color: #3b0764;
       text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-      right: 10px;
-      top: 45px;
+      right: 15px;
+      top: 20px;
       z-index: 3;
-      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .modal {
@@ -174,15 +158,11 @@
 </head>
 <body>
 
-  <div class="heart-bg" style="top: 8%; left: 10%;">💖</div>
-  <div class="heart-bg" style="top: 15%; right: 12%; animation-delay: 1s;">✨</div>
-  <div class="heart-bg" style="top: 75%; left: 8%; animation-delay: 2s;">🌸</div>
-  <div class="heart-bg" style="top: 82%; right: 10%; animation-delay: 1.5s;">💕</div>
-
-  <div class="card">
+  <!-- การ์ดพื้นที่สีชมพู -->
+  <div class="card-pink">
     <h1>พี่อยากคุยกับเค้ามั้ยยยย 🥺💖</h1>
     
-    <div class="btn-area" id="btnArea">
+    <div class="play-area" id="playArea">
       <button id="yesBtn" onclick="clickYes()">อยากคุย 💕</button>
       <button id="noBtn" onclick="moveButton()" ontouchstart="moveButton(event)">ไม่อยากคุย 🥺</button>
     </div>
@@ -204,12 +184,12 @@
       if (e) e.preventDefault();
       
       const noBtn = document.getElementById('noBtn');
-      const area = document.getElementById('btnArea');
+      const area = document.getElementById('playArea');
 
       if (escapeCount < maxEscapes) {
         escapeCount++;
 
-        // ล็อคพิกัดขยับเด้งให้อยู่ในพื้นที่การ์ดสายตาแบบเป๊ะๆ
+        // คำนวณพิกัดให้ปุ่มกระโดดวิ่งไปตรงไหนก็ได้บนการ์ดสีชมพู โดยไม่หลุดขอบออกไปนอกสายตา
         const maxX = area.clientWidth - noBtn.clientWidth;
         const maxY = area.clientHeight - noBtn.clientHeight;
 
