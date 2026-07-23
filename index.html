@@ -27,16 +27,17 @@
       padding: 20px;
     }
 
-    /* พื้นหลังการ์ดสีชมพูขนาดใหญ่แบบเต็มตา */
+    /* การ์ดสีชมพูขนาดกะทัดรัดเท่าเดิม */
     .card-pink {
-      background: #ffe6eb;
-      padding: 35px 20px 20px 20px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      padding: 35px 20px;
       border-radius: 35px;
       box-shadow: 0 20px 45px rgba(238, 156, 167, 0.45);
       border: 4px solid #ffffff;
       width: 100%;
-      max-width: 380px;
-      height: 480px; /* ล็อคความสูงการ์ดไว้พอดีสายตา */
+      max-width: 340px;
+      height: 320px; /* ล็อคขนาดความสูงไว้พอดีการ์ดเดิม */
       position: relative;
       display: flex;
       flex-direction: column;
@@ -48,12 +49,12 @@
       font-size: 26px;
       font-weight: 700;
       line-height: 1.4;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       -webkit-text-stroke: 1.2px #ffffff;
       text-shadow: 0px 4px 10px rgba(255, 51, 102, 0.2);
     }
 
-    /* พื้นที่สีชมพูทั้งหมดที่ปุ่มจะเด้งเล่นได้ในระยะสายตา */
+    /* พื้นที่เล่นปุ่ม เด้งได้ทั่วภายในการ์ดสีชมพู */
     .play-area {
       position: relative;
       width: 100%;
@@ -61,7 +62,7 @@
     }
 
     button {
-      padding: 14px 24px;
+      padding: 12px 22px;
       font-size: 18px;
       font-family: 'Mitr', sans-serif;
       font-weight: 600;
@@ -74,12 +75,12 @@
       position: absolute;
     }
 
-    /* ปุ่มอยากคุย ล็อคตำแหน่งไว้อย่างมั่นคง */
+    /* ปุ่มอยากคุย อยู่ประจำตำแหน่ง */
     #yesBtn {
       background: linear-gradient(135deg, #ff758f, #ff4d6d);
       color: #ffffff;
       text-shadow: 0 2px 4px rgba(0,0,0,0.15);
-      left: 15px;
+      left: 10px;
       top: 20px;
       z-index: 2;
       transition: transform 0.2s ease;
@@ -89,15 +90,15 @@
       transform: scale(0.92);
     }
 
-    /* ปุ่มไม่อยากคุย เด้งขยับได้ทั่วพื้นที่สีชมพู ไม่หลุดสายตา */
+    /* ปุ่มไม่อยากคุย เด้งหนีออกจากโซนเดิม มาวิ่งทั่วการ์ดสีชมพู */
     #noBtn {
       background: linear-gradient(135deg, #d8b4fe, #c084fc);
       color: #3b0764;
       text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-      right: 15px;
+      right: 10px;
       top: 20px;
       z-index: 3;
-      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: all 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .modal {
@@ -158,7 +159,6 @@
 </head>
 <body>
 
-  <!-- การ์ดพื้นที่สีชมพู -->
   <div class="card-pink">
     <h1>พี่อยากคุยกับเค้ามั้ยยยย 🥺💖</h1>
     
@@ -189,7 +189,7 @@
       if (escapeCount < maxEscapes) {
         escapeCount++;
 
-        // คำนวณพิกัดให้ปุ่มกระโดดวิ่งไปตรงไหนก็ได้บนการ์ดสีชมพู โดยไม่หลุดขอบออกไปนอกสายตา
+        // สุ่มพิกัดให้อยู่แค่ภายในกล่องการ์ดสีชมพู ไม่หลุดขอบการ์ดออกไป
         const maxX = area.clientWidth - noBtn.clientWidth;
         const maxY = area.clientHeight - noBtn.clientHeight;
 
